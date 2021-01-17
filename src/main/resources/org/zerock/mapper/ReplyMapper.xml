@@ -5,7 +5,7 @@
 
 <mapper namespace="org.zerock.mapper.ReplyMapper">
 
-	<!-- 댓글 등록 (create) -->
+	<!-- 댓글 등록 (create) : 1 반환 (여러 개 등록도 1) -->
 	<insert id="insert">
 		insert into tbl_reply (rno, bno, reply, replyer)
 			values (seq_reply.nextval, #{bno}, #{reply}, #{replyer})
@@ -16,7 +16,7 @@
 		select * from tbl_reply where rno = #{rno}
 	</select>
 	
-	<!-- 댓글 삭제 (delete) -->
+	<!-- 댓글 삭제 (delete) : DELETE된 행의 갯수 반환 -->
 	<delete id="delete">
 		delete from tbl_reply where rno = #{rno}
 	</delete>
