@@ -21,7 +21,7 @@
 		delete from tbl_reply where rno = #{rno}
 	</delete>
 	
-	<!-- 댓글 수정 (update) -->
+	<!-- 댓글 수정 (update) : 수정된 행의 갯수 반환 -->
 	<update id="update">
 		update tbl_reply 
 		set reply = #{reply}, updatedate = sysdate 
