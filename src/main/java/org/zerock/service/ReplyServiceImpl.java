@@ -52,7 +52,7 @@ public class ReplyServiceImpl implements ReplyService {
 		return mapper.update(vo);
 	}
 
-	// 한 게시물당 댓글 가져오기
+	// 특정 한 개시물의 댓글 가져오기
 	@Override
 	public List<ReplyVO> getList(Criteria cri, Long bno) {
 		log.info("get Reply List of a Board " + bno);
