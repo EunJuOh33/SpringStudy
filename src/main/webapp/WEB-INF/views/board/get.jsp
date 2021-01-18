@@ -61,10 +61,20 @@
 					
 					// for replyService add test
 					replyService.add(
-						{reply:"JS Test", replyer:"tester", bno:bnoValue},	// 객체 타입으로 만들어 전송
+						{reply:"JS Test", replyer:"tester", bno:bnoValue},	// add의 파라미터인 reply를 객체 타입으로 만들어 전송
 						function(result) {	// Ajax 전송 결과를 처리하는 함수
 							alert("RESULT: " + result);	// 성공하면 success 출력
 						}
+					);
+					
+					// for replyService getList test
+					replyService.getList(
+							{bno:bnoValue, page:1}, 
+							function(list) {
+								for(var i=0; len = list.length||0; i < len; i++) {
+									console.log(list[i]);
+								}
+							}
 					);
 				</script>
 				
