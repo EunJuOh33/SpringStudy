@@ -54,11 +54,18 @@
 				<script type="text/javascript" src="/resources/js/reply.js"></script>
 				
 				<script type="text/javascript">
-					$(document).ready(function() {
-						
-						console.log(replyService);
+					console.log("==================");
+					console.log("JS TEST");
 					
-					});
+					var bnoValue = '<c:out value="${board.bno}" />';	// 컨트롤러를 통해 get페이지로 넘어온 bno
+					
+					// for replyService add test
+					replyService.add(
+						{reply:"JS Test", replyer:"tester", bno:bnoValue},	// 객체 타입으로 만들어 전송
+						function(result) {	// Ajax 전송 결과를 처리하는 함수
+							alert("RESULT: " + result);	// 성공하면 success 출력
+						}
+					);
 				</script>
 				
 				<script>	
