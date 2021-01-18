@@ -9,7 +9,7 @@ var replyService = (function() {
 		$.ajax({
 			type : 'post',
 			url : '/replies/new',
-			data : JSON.stringify(reply),
+			data : JSON.stringify(reply),						// 자바스크립트의 값을 JSON 문자열로 변환
 			contentType : "application/json; charset=utf-8",	// 데이터 전송 타입
 			success : function(result, status, xhr) {	// Ajax 호출이 성공하고,
 							if (callback) {				// callback 값으로 적절한 함수가 존재한다면
@@ -61,10 +61,49 @@ var replyService = (function() {
 		});
 	}
 	
+	/* 댓글 수정 */
+	function update(reply, callback, error) {
+		
+		console.log("RNO: " + reply.rno);
+		
+		$.ajax({
+			type : 'put',
+			url : '/replies/' + reply.rno,
+			data : JSON.stringify(reply),
+			contentType : "application/json; charset=utf-8",
+			success : function(result, status, xhr) {
+						if(callback) {
+							callback(result);
+						}
+					},
+			error : function(xhr, status, er) {
+						if(error) {
+							error(er);
+						}
+					}
+		});
+	}
+	
+	/* 댓글 번호로 단순 댓글 조회 */
+	function get(rno, callback, error) {
+		$.get(
+			"/replies/" + rno + ".json", 
+			function(result) {
+			
+				if(callback) {
+					callback(result);
+				}
+			
+			}).fail(function(xhr, status, err) {
+					error();
+		});
+	}
+	
 	
 	return {
 		add : add,
 		getList : getList,
-		remove : remove
+		remove : remove,
+		update : update
 	};
 })();

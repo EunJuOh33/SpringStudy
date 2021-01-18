@@ -80,7 +80,7 @@
 					// for replyService remove test
 					replyService.remove(
 							23, 
-							function(count) {	// 23번 댓글 삭제
+							function(count) {	// 22번 댓글 수정
 								console.log(count);
 					
 								if (count === "success") {
@@ -91,6 +91,20 @@
 								alert('ERROR...');
 							}
 					);
+					
+					// for replyService update test
+					replyService.update(
+							{rno : 22, bno : bnoValue, reply : "Modified Reply...."},
+							function(result) {
+								alert("수정완료...");
+							});
+					
+					// for replyService get test
+					replyService.get(	
+							10, // 10번 댓글 조회
+							function(data) {
+								console.log(data);					
+							});
 				</script>
 				
 				<script>	
