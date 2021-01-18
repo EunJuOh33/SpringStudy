@@ -76,6 +76,21 @@
 								}
 							}
 					);
+					
+					// for replyService remove test
+					replyService.remove(
+							23, 
+							function(count) {	// 23번 댓글 삭제
+								console.log(count);
+					
+								if (count === "success") {
+									alert("REMOVE");
+								}
+							},
+							function(err) {
+								alert('ERROR...');
+							}
+					);
 				</script>
 				
 				<script>	
