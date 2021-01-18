@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,5 +56,27 @@ public class ReplyController {
 		log.info(cri);
 		
 		return new ResponseEntity<>(service.getList(cri, bno), HttpStatus.OK);	// getList : 댓글 정보를 ReplyVO로 반환, 200("Success"를 의미하는 코드)
+	}
+	
+	/* 댓글 번호로 조회
+	 * - 그런데 rno1 = bno42, 
+	 * 			rno2 = bno28 이렇게 bno와는 뒤죽박죽 되어있다. */
+	@GetMapping(value = "/{rno}",
+				produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
+	public ResponseEntity<ReplyVO> get(@PathVariable("rno") Long rno) {
+		
+		log.info("get: " + rno);
+		
+		return new ResponseEntity<>(service.get(rno), HttpStatus.OK);
+	}
+	
+	/* 댓글 삭제 */
+	@DeleteMapping(value = "/{rno}", produces = { MediaType.TEXT_PLAIN_VALUE })
+	public ResponseEntity<String> remove(@PathVariable("rno") Long rno) {
+		
+		log.info("remove" + rno);
+		
+		return service.remove(rno) == 1 ?
+				new ResponseEntity<>("success", HttpStatus.OK) : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
