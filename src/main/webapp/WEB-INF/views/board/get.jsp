@@ -51,7 +51,61 @@
 				<button type="button" class="btn btn-default listBtn"><a href="/board/list">List</a></button>
                 <button type="button" class="btn btn-default modBtn"><a href="/board/modify?bno=<c:out value="${board.bno}"/>">Modify</a></button>
 				
-				<script type="text/javascript" src="/resources/js/reply.js"></script>	<!-- 제대로 되는지 확인 -->
+				<script type="text/javascript" src="/resources/js/reply.js"></script>
+				
+				<script type="text/javascript">
+					console.log("==================");
+					console.log("JS TEST");
+					
+					var bnoValue = '<c:out value="${board.bno}" />';	// 컨트롤러를 통해 get페이지로 넘어온 bno
+					
+					// for replyService add test
+					replyService.add(
+						{reply:"JS Test", replyer:"tester", bno:bnoValue},	// add의 파라미터인 reply를 객체 타입으로 만들어 전송
+						function(result) {	// Ajax 전송 결과를 처리하는 함수
+							alert("RESULT: " + result);	// 성공하면 success 출력
+						}
+					);
+					
+					// for replyService getList test
+					replyService.getList(
+							{bno:bnoValue, page:1}, 
+							function(list) {
+								for(var i=0; len = list.length||0; i < len; i++) {
+									console.log(list[i]);
+								}
+							}
+					);
+					
+					// for replyService remove test
+					replyService.remove(
+							23, 
+							function(count) {	// 22번 댓글 수정
+								console.log(count);
+					
+								if (count === "success") {
+									alert("REMOVE");
+								}
+							},
+							function(err) {
+								alert('ERROR...');
+							}
+					);
+					
+					// for replyService update test
+					replyService.update(
+							{rno : 22, bno : bnoValue, reply : "Modified Reply...."},
+							function(result) {
+								alert("수정완료...");
+							});
+					
+					// for replyService get test
+					replyService.get(	
+							10, // 10번 댓글 조회
+							function(data) {
+								console.log(data);					
+							});
+				</script>
 				
 				<script>	
 					// 위의 버튼 눌렀을 때 실행
