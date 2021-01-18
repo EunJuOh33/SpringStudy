@@ -51,7 +51,15 @@
 				<button type="button" class="btn btn-default listBtn"><a href="/board/list">List</a></button>
                 <button type="button" class="btn btn-default modBtn"><a href="/board/modify?bno=<c:out value="${board.bno}"/>">Modify</a></button>
 				
-				<script type="text/javascript" src="/resources/js/reply.js"></script>	<!-- 제대로 되는지 확인 -->
+				<script type="text/javascript" src="/resources/js/reply.js"></script>
+				
+				<script type="text/javascript">
+					$(document).ready(function() {
+						
+						console.log(replyService);
+					
+					});
+				</script>
 				
 				<script>	
 					// 위의 버튼 눌렀을 때 실행
