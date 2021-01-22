@@ -6,13 +6,14 @@
 
 
 <%@include file="../includes/header.jsp" %>	<!-- 이 부분에 header 파일을 넣는다는 의미 -->
+
+
 <div class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Tables</h1>
-    </div>
-    <!-- /.col-lg-12 -->
-</div>
-<!-- /.row -->
+    </div>	<!-- /.col-lg-12 -->
+</div>	<!-- /.row -->
+
 <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default">
@@ -54,57 +55,37 @@
 				<script type="text/javascript" src="/resources/js/reply.js"></script>
 				
 				<script type="text/javascript">
-					console.log("==================");
-					console.log("JS TEST");
 					
-					var bnoValue = '<c:out value="${board.bno}" />';	// 컨트롤러를 통해 get페이지로 넘어온 bno
+					$(document).ready(function() {
 					
-					// for replyService add test
-					replyService.add(
-						{reply:"JS Test", replyer:"tester", bno:bnoValue},	// add의 파라미터인 reply를 객체 타입으로 만들어 전송
-						function(result) {	// Ajax 전송 결과를 처리하는 함수
-							alert("RESULT: " + result);	// 성공하면 success 출력
-						}
-					);
-					
-					// for replyService getList test
-					replyService.getList(
-							{bno:bnoValue, page:1}, 
-							function(list) {
-								for(var i=0; len = list.length||0; i < len; i++) {
-									console.log(list[i]);
+						var bnoValue = '<c:out value="${board.bno}" />';	// 컨트롤러를 통해 get페이지로 넘어온 bno
+						var replyUL = $(".chat");
+						
+						showList(1);
+						
+						function showList(page) {
+							replyService.getList({bno.bnoValue, page : page || 1} function(list) {
+								var str = "";
+								
+								if(list == null || list.length == 0) {
+									replyUL.html("");
+									
+									return;
 								}
-							}
-					);
-					
-					// for replyService remove test
-					replyService.remove(
-							23, 
-							function(count) {	// 22번 댓글 수정
-								console.log(count);
-					
-								if (count === "success") {
-									alert("REMOVE");
+								
+								for (var i=0; len = list.length || 0; i < len; i++) {
+									str += "<li class='left clearfix' data-rno='" + list[i].rno + "'>";
+									str += "	<div><div class='header'><strong class='primary-front'>" + list[i].replyer + "</strong>";
+									str += "							<small class='pull-right text-muted'>" + list[i].replyDate + "</small></div>";
+									str += "		<p>" + list[i].reply + "</p></div></li>";	
 								}
-							},
-							function(err) {
-								alert('ERROR...');
-							}
-					);
-					
-					// for replyService update test
-					replyService.update(
-							{rno : 22, bno : bnoValue, reply : "Modified Reply...."},
-							function(result) {
-								alert("수정완료...");
-							});
-					
-					// for replyService get test
-					replyService.get(	
-							10, // 10번 댓글 조회
-							function(data) {
-								console.log(data);					
-							});
+								
+								replyUL.html(str);
+							
+							});	// end function
+						}	// end showList
+						
+					});
 				</script>
 				
 				<script>	
@@ -125,11 +106,40 @@
 						actionForm.submit();
 					});
 				</script>
-            </div>
-            <!-- /.panel-body -->
-        </div>
-        <!-- /.panel -->
-    </div>
-    <!-- /.col-lg-12 -->
-</div>
+            </div>	<!-- /.panel-body -->
+        </div>	<!-- /.panel -->
+    </div>	<!-- /.col-lg-12 -->
+</div>	<!-- /.row -->
+
+
+<!-- 댓글 -->
+<div class='row'>
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<i class="fa fa-comments fa-fw"></i> Reply
+			</div>
+			
+			<div class="paenl-body">
+				<ul class="chat">
+					<!-- start reply -->
+					<li class="left clearfix" data-rno-'12'>
+						<div>
+							<div class="header">
+								<strong class="primary-font">user00</strong>
+								<small class="pull-right text-muted">2018-01-01 13:13 </small>
+							</div>
+							<p>Good job! </p>
+						</div>
+					</li>
+					<!-- end reply -->
+				</ul>
+			</div>	<!-- /.panel-body -->
+			
+		</div>	<!-- /.panel-default -->
+	</div>	<!-- /.col-lg-12 -->
+</div>	<!-- /.row -->
+
+
+
 <%@include file="../includes/footer.jsp" %>
