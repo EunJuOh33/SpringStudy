@@ -54,35 +54,38 @@
 				
 				<script type="text/javascript" src="/resources/js/reply.js"></script>
 				
-				<script type="text/javascript">
+ 				<script type="text/javascript">
 					
 					$(document).ready(function() {
 					
-						var bnoValue = '<c:out value="${board.bno}" />';	// 컨트롤러를 통해 get페이지로 넘어온 bno
-						var replyUL = $(".chat");
+						var bnoValue = '<c:out value="${board.bno}" />';	// 컨트롤러를 통해 get페이지로 넘어온 bno 확인!
+						var replyUL = $(".chat");	// <ul>
 						
 						showList(1);
 						
 						function showList(page) {
-							replyService.getList({bno.bnoValue, page : page || 1} function(list) {
-								var str = "";
+							replyService.getList(
+												{bno: bnoValue, page : page || 1},	// param(bno, page)
+												function(list) {	// callback
+													var str = "";
+													
+													if(list == null || list.length == 0) {
+														replyUL.html("");
+														
+														return;
+													}
+													
+													// <ul class="chat"> 밑을 채워준다.
+													var len = list.length || 0;
+													for (var i=0; i < len; i++) {
+														str += "<li class='left clearfix' data-rno='" + list[i].rno + "'>";
+														str += "	<div><div class='header'><strong class='primary-front'>" + list[i].replyer + "</strong>";
+														str += "							<small class='pull-right text-muted'>" + replyService.displayTime(list[i].replyDate) + "</small></div>";
+														str += "		<p>" + list[i].reply + "</p></div></li>";
+													}
 								
-								if(list == null || list.length == 0) {
-									replyUL.html("");
-									
-									return;
-								}
-								
-								for (var i=0; len = list.length || 0; i < len; i++) {
-									str += "<li class='left clearfix' data-rno='" + list[i].rno + "'>";
-									str += "	<div><div class='header'><strong class='primary-front'>" + list[i].replyer + "</strong>";
-									str += "							<small class='pull-right text-muted'>" + list[i].replyDate + "</small></div>";
-									str += "		<p>" + list[i].reply + "</p></div></li>";	
-								}
-								
-								replyUL.html(str);
-							
-							});	// end function
+													replyUL.html(str);
+												});	// end function showList, replyService.getList
 						}	// end showList
 						
 					});
@@ -123,6 +126,7 @@
 			<div class="paenl-body">
 				<ul class="chat">
 					<!-- start reply -->
+					<!-- replyService.getList 가 제대로 작동하지 않으면 아래와 같이 출력-->
 					<li class="left clearfix" data-rno-'12'>
 						<div>
 							<div class="header">
@@ -139,6 +143,8 @@
 		</div>	<!-- /.panel-default -->
 	</div>	<!-- /.col-lg-12 -->
 </div>	<!-- /.row -->
+
+
 
 
 
