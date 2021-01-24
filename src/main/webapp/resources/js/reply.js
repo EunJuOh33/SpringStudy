@@ -1,4 +1,4 @@
-console.log("Reply Module......");
+console.log("reply.js 정상작동......");
 
 var replyService = (function() {
 	
@@ -15,7 +15,7 @@ var replyService = (function() {
 							if (callback) {				// callback 값으로 적절한 함수가 존재한다면
 								callback(result);		// 해당 함수 호출
 							}
-					},
+						},
 			error : function(xhr, status, er) {
 						if (error) {
 							error(er);
@@ -30,7 +30,7 @@ var replyService = (function() {
 		var page = param.page || 1;
 		
 		$.getJSON(
-			"/replies/pages/" + bno + "/" + page + ".json",		// 첫 번째 매개변수는 JSON 파일
+			"/replies/pages/" + bno + "/" + page + ".json",		// 첫 번째 매개변수는 JSON 파일 (data -> 주소 치면 나오니 확인하기)
 			function(data) {									// 두 번째 매개변수는 콜백함수. JSON 파일을 이용하여 로드된 데이터 처리
 				if(callback) {
 					callback(data);
@@ -99,11 +99,40 @@ var replyService = (function() {
 		});
 	}
 	
+	/* 댓글 시간 처리 */
+	function displayTime(timeValue) {	// timeValue = replyDate = 자바 Date 객체
+		var today = new Date();	// 현재 날짜 및 시간
+		var gap = today.getTime() - timeValue;
+		var dateObj = new Date(timeValue);
+		var str = "";
+		
+		// console.log(timeValue);	// 1610721679000 자바 Date는 객체
+		// console.log(dateObj);	// Fri Jan 15 2021 23:41:19 GMT+0900 (대한민국 표준시)
+		
+		if(gap < (1000 * 60 * 60 * 24)) {	// 해당 일 내의 댓글이라면
+			var hh = dateObj.getHours();
+			var mi = dateObj.getMinutes();
+			var ss = dateObj.getSeconds();
+			
+			return [ (hh > 9 ? '' : '0') + hh , ":", (mi > 9 ? '' : '0') + mi , ":", (ss > 9 ? '' : '0') + ss ].join('');
+		
+		} else {
+			var yy = dateObj.getFullYear();
+			var mm = dateObj.getMonth() + 1;	// getMonth() is zero-based
+			var dd = dateObj.getDate();
+			
+			return [ yy, '/', (mm > 9 ? '' : '0') + mm, '/', (dd > 9 ? '' : '0') + dd ].join('');
+		}
+	}
+	
 	
 	return {
 		add : add,
+		get : get,
 		getList : getList,
 		remove : remove,
-		update : update
+		update : update,
+		displayTime : displayTime
 	};
+	
 })();
