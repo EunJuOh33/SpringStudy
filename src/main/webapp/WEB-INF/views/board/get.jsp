@@ -52,45 +52,6 @@
 				<button type="button" class="btn btn-default listBtn"><a href="/board/list">List</a></button>
                 <button type="button" class="btn btn-default modBtn"><a href="/board/modify?bno=<c:out value="${board.bno}"/>">Modify</a></button>
 				
-				<script type="text/javascript" src="/resources/js/reply.js"></script>
-				
- 				<script type="text/javascript">
-					
-					$(document).ready(function() {
-					
-						var bnoValue = '<c:out value="${board.bno}" />';	// 컨트롤러를 통해 get페이지로 넘어온 bno 확인!
-						var replyUL = $(".chat");	// <ul>
-						
-						showList(1);
-						
-						function showList(page) {
-							replyService.getList(
-												{bno: bnoValue, page : page || 1},	// param(bno, page)
-												function(list) {	// callback
-													var str = "";
-													
-													if(list == null || list.length == 0) {
-														replyUL.html("");
-														
-														return;
-													}
-													
-													// <ul class="chat"> 밑을 채워준다.
-													var len = list.length || 0;
-													for (var i=0; i < len; i++) {
-														str += "<li class='left clearfix' data-rno='" + list[i].rno + "'>";
-														str += "	<div><div class='header'><strong class='primary-front'>" + list[i].replyer + "</strong>";
-														str += "							<small class='pull-right text-muted'>" + replyService.displayTime(list[i].replyDate) + "</small></div>";
-														str += "		<p>" + list[i].reply + "</p></div></li>";
-													}
-								
-													replyUL.html(str);
-												});	// end function showList, replyService.getList
-						}	// end showList
-						
-					});
-				</script>
-				
 				<script>	
 					// 위의 버튼 눌렀을 때 실행
 					var actionForm = $("#actionForm");
@@ -119,8 +80,13 @@
 <div class='row'>
 	<div class="col-lg-12">
 		<div class="panel panel-default">
-			<div class="panel-heading">
+		<!--<div class="panel-heading">
 				<i class="fa fa-comments fa-fw"></i> Reply
+			</div>	-->
+			<div class="panel-heading">
+				<i class="fa fa-comments fa-fw"></i> 
+				Reply
+				<button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>New Reply</button>
 			</div>
 			
 			<div class="paenl-body">
@@ -145,7 +111,120 @@
 </div>	<!-- /.row -->
 
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Reply MODAL</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                	<label>Reply</label>
+                	<input class="form-control" name='reply' value='New Reply!!!'>
+                </div>
+                <div class="form-group">
+                	<label>Replyer</label>
+                	<input class="form-control" name='replyer' value='replyer'>
+                </div>
+                <div class="form-group">
+                	<label>Reply Date</label>
+                	<input class="form-control" name='replyDate' value=''>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id='modalModBtn' type="button" class="btn btn-warning">Modify</button>
+                <button id='modalRemoveBtn' type="button" class="btn btn-danger">Remove</button>            
+                <button id='modalRegisterBtn' type="button" class="btn btn-primary">Register</button>            
+                <button id='modalCloseBtn' type="button" class="btn btn-dafault">Close</button>            
+            </div>
+        </div>	<!-- /.modal-content -->
+    </div>	<!-- /.modal-dialog -->
+</div>	<!-- /.modal -->
 
+
+<script type="text/javascript" src="/resources/js/reply.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+	/* 1. 댓글 목록 */
+	var bnoValue = '<c:out value="${board.bno}" />';	// 컨트롤러를 통해 get페이지로 넘어온 bno 확인!
+	var replyUL = $(".chat");	// <ul>
+	
+	showList(1);
+	
+	function showList(page) {
+		replyService.getList(
+							{bno: bnoValue, page : page || 1},	// param(bno, page)
+							function(list) {	// callback
+								var str = "";
+								
+								if(list == null || list.length == 0) {
+									replyUL.html("");
+									
+									return;
+								}
+								
+								// <ul class="chat"> 밑을 채워준다.
+								var len = list.length || 0;
+								for (var i=0; i < len; i++) {
+									str += "<li class='left clearfix' data-rno='" + list[i].rno + "'>";
+									str += "	<div><div class='header'><strong class='primary-front'>" + list[i].replyer + "</strong>";
+									str += "							<small class='pull-right text-muted'>" + replyService.displayTime(list[i].replyDate) + "</small></div>";
+									str += "		<p>" + list[i].reply + "</p></div></li>";
+								}
+			
+								replyUL.html(str);
+							});	// end function showList, replyService.getList
+	}	// end showList
+	
+	
+	/* 2. 새로운 댓글 등록 - 모달 */
+	var modal = $(".modal");
+	var modalInputReply = modal.find("input[name='reply']");
+	var modalInputReplyer = modal.find("input[name='replyer']");
+	var modalInputReplyDate = modal.find("input[name='replyDate']");
+	
+	var modalModBtn = $("#modalModBtn");
+	var modalRemoveBtn = $("#modalRemoveBtn");
+	var modalRegisterBtn = $("#modalRegisterBtn");
+	
+	// 'New Reply' 버튼
+	$("#addReplyBtn").on("click", function(e) {
+		modal.find("input").val("");				// modal 창 안의 input value들을 모두 ""로 만든다.(지운다)
+		modalInputReplyDate.closest("div").hide();	// closest : 엘리멘트에 가장 까가운 조상 (날짜 칸을 삭제한다.)
+		
+		modal.find("button[id != 'modalCloseBtn']").hide();	// 모달 창에서 Close 버튼을 제외한 버튼을 모두 숨긴다.
+		modalRegisterBtn.show();
+		
+		$(".modal").modal("show");
+	});
+	
+	// '등록' 버튼
+	modalRegisterBtn.on("click", function(e) {
+		var reply = {
+				reply : modalInputReply.val(),
+				replyer : modalInputReplyer.val(),
+				bno : bnoValue
+		};
+		
+		replyService.add(
+				reply, 
+				function(result) {
+					alert(result);	// 성공 : success
+					
+					modal.find("input").val("");	// 등록했던 내용으로 다시 등록할 수 없도록 입력 창을 비운다.
+					modal.modal("hide");
+					
+					showList(1);	// 등록 후 댓글 목록 갱신
+				});
+	});
+	
+});
+</script>
 
 
 <%@include file="../includes/footer.jsp" %>
