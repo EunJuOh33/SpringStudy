@@ -1,7 +1,5 @@
 package org.zerock.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.domain.Criteria;
+import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
 import org.zerock.service.ReplyService;
 
@@ -48,15 +47,14 @@ public class ReplyController {
 	/* 특정 게시물의 댓글 목록 확인 */
 	@GetMapping(value = "/pages/{bno}/{page}",
 				produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_UTF8_VALUE })
-	public ResponseEntity<List<ReplyVO>> getList(@PathVariable("page") int page, @PathVariable("bno") Long bno) {
-		
-		log.info("getList..........");
+	public ResponseEntity<ReplyPageDTO> getList(@PathVariable("page") int page, @PathVariable("bno") Long bno) {
 		
 		Criteria cri = new Criteria(page, 10);
 		
-		log.info(cri);
+		log.info("get Reply List bno: " + bno);
+		log.info("cri: " + cri);
 		
-		return new ResponseEntity<>(service.getList(cri, bno), HttpStatus.OK);	// getList : 댓글 정보를 ReplyVO로 반환, 200("Success"를 의미하는 코드)
+		return new ResponseEntity<>(service.getListPage(cri, bno), HttpStatus.OK);	// getListPage : ReplyPageDTO로 반환, 200("Success"를 의미하는 코드)
 	}
 	
 	/* 댓글 번호로 조회

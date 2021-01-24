@@ -80,14 +80,24 @@ public class ReplyMapperTests {
 //		log.info("UPDATE COUNT: " + count);
 //	}
 	
+//	@Test
+//	public void testList() {
+//		
+//		Criteria cri = new Criteria();	// 기본값을 1페이지, 10개로 지정
+//		
+//		List<ReplyVO> replies = mapper.getListWithPaging(cri, bnoArr[0]);	// bnoArr[0] = 42번 게시글
+//		
+//		replies.forEach(reply -> log.info(reply));	// replies를 reply 객체에 담아서 하나씩 꺼내 출력
+//	}
+	
 	@Test
-	public void testList() {
+	public void testList2() {
 		
-		Criteria cri = new Criteria();	// 기본값을 1페이지, 10개로 지정
+		Criteria cri = new Criteria(2, 10);
 		
-		List<ReplyVO> replies = mapper.getListWithPaging(cri, bnoArr[0]);	// bnoArr[0] = 42번 게시글
+		List<ReplyVO> replies = mapper.getListWithPaging(cri, 28L);
 		
-		replies.forEach(reply -> log.info(reply));	// replies를 reply 객체에 담아서 하나씩 꺼내 출력
+		replies.forEach(reply -> log.info(reply));
 	}
 	
 	

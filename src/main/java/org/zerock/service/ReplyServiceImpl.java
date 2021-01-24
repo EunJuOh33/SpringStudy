@@ -1,9 +1,9 @@
 package org.zerock.service;
 
-import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.zerock.domain.Criteria;
+import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
 import org.zerock.mapper.ReplyMapper;
 
@@ -53,11 +53,20 @@ public class ReplyServiceImpl implements ReplyService {
 	}
 
 	// 특정 한 개시물의 댓글 가져오기
+//	@Override
+//	public List<ReplyVO> getList(Criteria cri, Long bno) {
+//		log.info("get Reply List of a Board " + bno);
+//		
+//		return mapper.getListWithPaging(cri, bno);
+//	}
+
+	// 특정 게시글을 전체 댓글 수
 	@Override
-	public List<ReplyVO> getList(Criteria cri, Long bno) {
-		log.info("get Reply List of a Board " + bno);
+	public ReplyPageDTO getListPage(Criteria cri, Long bno) {
 		
-		return mapper.getListWithPaging(cri, bno);
+		return new ReplyPageDTO(
+				mapper.getCountByBno(bno),
+				mapper.getListWithPaging(cri, bno));
 	}
 	
 }
