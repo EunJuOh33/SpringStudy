@@ -93,7 +93,7 @@
 				<ul class="chat">
 					<!-- start reply -->
 					<!-- replyService.getList 가 제대로 작동하지 않으면 아래와 같이 출력-->
-					<li class="left clearfix" data-rno-'12'>
+					<li class="left clearfix" data-rno='12'>
 						<div>
 							<div class="header">
 								<strong class="primary-font">user00</strong>
@@ -203,7 +203,7 @@ $(document).ready(function() {
 		$(".modal").modal("show");
 	});
 	
-	// '등록' 버튼
+	// 모달창 안 '등록' 버튼
 	modalRegisterBtn.on("click", function(e) {
 		var reply = {
 				reply : modalInputReply.val(),
@@ -221,6 +221,61 @@ $(document).ready(function() {
 					
 					showList(1);	// 등록 후 댓글 목록 갱신
 				});
+	});
+	
+	
+	/* 3. 특정 댓글 수정/삭제 */
+	
+	// 특정 댓글 클릭 이벤트 처리
+	$(".chat").on("click", "li", function(e) {	// 클릭 이벤트는 <ul class="chat">에 걸었지만, this 는 각 댓글인 li태그 
+		var rno = $(this).data("rno");
+		
+		// console.log(rno);
+		
+		replyService.get(
+				rno, 
+				function(reply) {
+					modalInputReply.val(reply.reply);
+					modalInputReplyer.val(reply.replyer);
+					modalInputReplyDate.val(replyService.displayTime( reply.replyDate )).attr("readonly", "readonly");
+					modal.data("rno", reply.rno);
+					
+					modal.find("button[id != 'modalCloseBtn']").hide();
+					modalModBtn.show();
+					modalRemoveBtn.show();
+					
+					$(".modal").modal("show");
+				});
+	});
+	
+	// 수정 버튼
+	modalModBtn.on("click", function(e) {
+		var reply = {
+				rno : modal.data("rno"), 
+				reply : modalInputReply.val()
+		};
+		
+		replyService.update(reply, function(result) {
+			
+			alert(result);	// 성공 : success
+			modal.modal("hide");
+			showList(1);
+		
+		});
+	});
+	
+	// 삭제 버튼
+	modalRemoveBtn.on("click", function(e) {
+		
+		var rno = modal.data("rno");
+		
+		replyService.remove(rno, function(result) {
+			
+			alert(result);
+			modal.modal("hide");
+			showList(1);
+		
+		});
 	});
 	
 });

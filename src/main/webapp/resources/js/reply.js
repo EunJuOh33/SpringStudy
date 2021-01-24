@@ -128,6 +128,7 @@ var replyService = (function() {
 	
 	return {
 		add : add,
+		get : get,
 		getList : getList,
 		remove : remove,
 		update : update,
