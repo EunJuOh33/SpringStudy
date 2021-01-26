@@ -20,4 +20,6 @@ public interface ReplyMapper {
 							@Param("cri") Criteria cri,
 							@Param("bno") Long bno);
 	
+	public int getCountByBno(Long bno);	// 특정 게시물의 전체 댓글 수
+	
 }

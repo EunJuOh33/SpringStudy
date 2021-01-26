@@ -33,7 +33,8 @@ var replyService = (function() {
 			"/replies/pages/" + bno + "/" + page + ".json",		// 첫 번째 매개변수는 JSON 파일 (data -> 주소 치면 나오니 확인하기)
 			function(data) {									// 두 번째 매개변수는 콜백함수. JSON 파일을 이용하여 로드된 데이터 처리
 				if(callback) {
-					callback(data);
+					// callback(data);	// 댓글 목록만 가져오는 경우
+					callback(data.replyCnt, data.list);	// 댓글 숫자와 목록을 가져오는 경우
 				}	
 			}).fail(function(xhr, status, err) {
 				if(error) {
