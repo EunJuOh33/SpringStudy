@@ -1,32 +1,36 @@
 package org.zerock.service;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.domain.Criteria;
 import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
+import org.zerock.mapper.BoardMapper;
 import org.zerock.mapper.ReplyMapper;
 
-import lombok.AllArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Service
 @Log4j
-@AllArgsConstructor
 public class ReplyServiceImpl implements ReplyService {
 	
+	@Setter(onMethod_ = @Autowired)
 	private ReplyMapper mapper;
 	
-// @AllArgsConstructor의 효과	
-//	public ReplyServiceImpl(ReplyMapper mapper) {
-		// 클래스에 존재하는 모든 필드에 대한 생성자를 자동으로 생성
-//	}
+	@Setter(onMethod_ = @Autowired)
+	private BoardMapper boardMapper;
 	
 	
 	// 등록
+	@Transactional
 	@Override
 	public int register(ReplyVO vo) {
 		log.info("register......" + vo);
+		
+		boardMapper.updateReplyCnt(vo.getBno(), 1);
 		
 		return mapper.insert(vo);
 	}
@@ -39,9 +43,15 @@ public class ReplyServiceImpl implements ReplyService {
 	}
 
 	// 삭제
+	@Transactional
 	@Override
 	public int remove(Long rno) {
 		log.info("remove......" + rno);
+		
+		ReplyVO vo = mapper.read(rno);
+		
+		boardMapper.updateReplyCnt(vo.getBno(), -1);
+		
 		return mapper.delete(rno);
 	}
 
@@ -52,7 +62,7 @@ public class ReplyServiceImpl implements ReplyService {
 		return mapper.update(vo);
 	}
 
-	// 특정 한 개시물의 댓글 가져오기
+	// 특정 한 게시물의 댓글 가져오기
 //	@Override
 //	public List<ReplyVO> getList(Criteria cri, Long bno) {
 //		log.info("get Reply List of a Board " + bno);
