@@ -31,10 +31,10 @@
 	
 	<!-- 페이징, 검색 -->
 	<select id="getListWithPaging" resultType="org.zerock.domain.BoardVO">
-		<![CDATA[ select bno, title, content, writer, regdate, updatedate
+		<![CDATA[ select bno, title, content, writer, regdate, updatedate, replycnt
 					from
 					(select /*+INDEX_DESC(tbl_board pk_board) */
-						rownum rn, bno, title, content, writer, regdate, updatedate
+						rownum rn, bno, title, content, writer, regdate, updatedate, replycnt
 						from tbl_board
 						where
 				]]>
@@ -83,6 +83,14 @@
 	<update id="update">
 		update tbl_board 
 			set title= #{title}, content=#{content}, writer = #{writer}, updateDate = sysdate
+			where bno = #{bno}
+	</update>
+	
+	
+	<!-- tbl_board 테이블에 댓글 수 데이터 추가 -->
+	<update id="updateReplyCnt">
+		update tbl_board 
+			set replycnt = replycnt + #{amount}
 			where bno = #{bno}
 	</update>
 </mapper>
