@@ -17,11 +17,16 @@
 	<button id='uploadBtn'>Upload</button>
 	
 	
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	
+	<script
+		src="https://code.jquery.com/jquery-3.5.1.js"
+  		integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  		crossorigin="anonymous"></script>
   		
   	<script>
 	  	$(document).ready(function() {
 	  		
+	  		// Upload버튼 클릭
 	  		$("#uploadBtn").on("click", function() {
 	  			
 	  			var formData = new FormData();
@@ -30,7 +35,25 @@
 	  			
 	  			console.log(files);
 	  			
-	  		});
+	  			// file 데이터를 formData에 추가
+	  			for(var i=0; i < files.length; i++) {
+	  				formData.append("uploadFile", files[i]);
+	  			}
+	  		
+	  			// ajax
+		  		$.ajax({
+		  			url: '/uploadAjaxAction',
+		  			processData: false,
+		  			contentType: false,
+		  			data: formData,
+		  			type: 'POST',
+		  			success: function(result) {
+		  						alert("Uploaded");
+		  					}
+	  			}); // end ajax
+	  			
+	  		});	// end uploadBtn 클릭
+	  		
 	  	});
   	</script>	
 </body>
