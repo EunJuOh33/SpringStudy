@@ -30,11 +30,6 @@ public class BoardController {
 	// @RequestMapping(value="/aaa", method=RequestMethod.GET)을 대신하는 코드. 메소드별로 다른 방식으로 처리하기 위함
 	public void list(Criteria cri, Model model) {
 		
-		// log.info("--------------------------------");
-		// log.info(cri);
-		// log.info("list --------------------------------");
-		
-		
 		int total = service.getTotal(cri);	// 전체 게시글의 수
 		log.info("total: " + total);
 		

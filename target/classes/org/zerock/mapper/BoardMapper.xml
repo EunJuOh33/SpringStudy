@@ -90,7 +90,7 @@
 	<!-- tbl_board 테이블에 댓글 수 데이터 추가 -->
 	<update id="updateReplyCnt">
 		update tbl_board 
-			set replycnt = replycnt + #{amount}
+			set replycnt = replycnt + #{amount} 
 			where bno = #{bno}
 	</update>
 </mapper>
