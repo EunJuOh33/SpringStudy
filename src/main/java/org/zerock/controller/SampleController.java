@@ -1,5 +1,6 @@
 package org.zerock.controller;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.domain.SampleVO;
 
@@ -20,6 +22,11 @@ import lombok.extern.log4j.Log4j;
 @RequestMapping("/sample")
 @Log4j
 public class SampleController {
+	
+	@GetMapping(value = "/restTest", produces = "text/plain; charset=UTF-8")
+	public String restTest(@RequestParam String str) {
+		return "Rest Test 완료!!!";
+	}
 	
 	@GetMapping(value = "/getText", produces = "text/plain; charset=UTF-8")
 	public String getText() {
@@ -64,4 +71,5 @@ public class SampleController {
 		
 		return result;
 	}
+	
 }
